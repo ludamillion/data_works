@@ -17,5 +17,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency 'factory_girl', '~> 3.0'
+  s.add_runtime_dependency 'graphviz', '~> 0.3.0'
 
 end
