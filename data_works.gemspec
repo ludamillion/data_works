@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.email         = ["ld.inglis@gmail.com"]
   s.summary       = %q{Reducing the complexity of testing complex data models }
   s.description   = %q{DataWorks makes it easier to work with FactoryGirl in the context of a complex data model.}
+  s.homepage      = 'https://github.com/dmcouncil/data_works'
   s.licenses      = ["Copyright (c) 2014 District Management Council"]
 
   s.files         = `git ls-files`.split("\n")
@@ -16,7 +17,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency 'factory_girl', '~> 3.0'
+  s.add_runtime_dependency 'factory_girl', '>= 3.0'
   s.add_runtime_dependency 'graphviz', '~> 0.3.0'
+  s.add_runtime_dependency 'rake', '>= 10.4.0'
 
 end
