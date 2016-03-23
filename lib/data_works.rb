@@ -8,3 +8,4 @@ require 'data_works/grafter'
 require 'data_works/works'
 require 'data_works/base'
 require 'data_works/config'
+require "data_works/railtie" if defined?(Rails)

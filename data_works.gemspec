@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "data_works/version"
 
 Gem::Specification.new do |s|
@@ -18,7 +19,8 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_runtime_dependency 'factory_girl', '>= 3.0'
-  s.add_runtime_dependency 'graphviz', '~> 0.3.0'
-  s.add_runtime_dependency 'rake', '>= 10.4.0'
+  s.add_runtime_dependency 'graphviz', '~> 0.1.0'
+  s.add_development_dependency "bundler", "~> 1.9"
+  s.add_development_dependency "rake", "~> 10.0"
 
 end
