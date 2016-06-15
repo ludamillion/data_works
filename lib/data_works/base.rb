@@ -13,6 +13,7 @@ module DataWorks
       method_name = method_name.to_s
       if method_name =~ /\A(add_|the_)(\w+)\Z/ ||
          method_name =~ /\A(\w+)(\d+)\Z/ ||
+         method_name =~ /\A(set_|clear_)current_default\Z/ ||
          method_name == 'visualize'
         @works.send(method_name, *args, &block)
       else

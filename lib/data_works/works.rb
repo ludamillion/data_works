@@ -6,6 +6,8 @@ module DataWorks
     def initialize
       # we keep a registry of all models that we create
       @data = {}
+      # keep a registry of the 'current default' model of a given type
+      @current_default = {}
     end
 
     def method_missing(method_name, *args, &block)
@@ -26,6 +28,14 @@ module DataWorks
       model_name = model_name.to_sym
       @data[model_name] ||= []
       @data[model_name] << model
+    end
+
+    def set_current_default(model, record)
+      @current_default[model] = record
+    end
+
+    def clear_current_default(model)
+      @current_default[model] = nil
     end
 
   private
@@ -61,8 +71,12 @@ module DataWorks
 
     def find(model_name, index)
       model_name = model_name.to_sym
-      @data[model_name] ||= []
-      @data[model_name][index.to_i-1]
+      if index == 1 && @current_default[model_name]
+        @current_default[model_name]
+      else
+        @data[model_name] ||= []
+        @data[model_name][index.to_i-1]
+      end
     end
 
   end
