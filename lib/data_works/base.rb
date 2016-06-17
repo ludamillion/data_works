@@ -14,6 +14,8 @@ module DataWorks
       if method_name =~ /\A(add_|the_)(\w+)\Z/ ||
          method_name =~ /\A(\w+)(\d+)\Z/ ||
          method_name =~ /\A(set_|clear_)current_default\Z/ ||
+         method_name == 'restrict_parentage' ||
+         method_name == 'clear_restriction_for' ||
          method_name == 'visualize'
         @works.send(method_name, *args, &block)
       else

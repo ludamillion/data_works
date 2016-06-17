@@ -8,6 +8,8 @@ module DataWorks
       @data = {}
       # keep a registry of the 'current default' model of a given type
       @current_default = {}
+      # keep a registry of the 'limiting scope' for parentage
+      @bounding_models = {}
     end
 
     def method_missing(method_name, *args, &block)
@@ -35,7 +37,15 @@ module DataWorks
     end
 
     def clear_current_default(model)
-      @current_default[model] = nil
+      @current_default.delete(model)
+    end
+
+    def restrict_parentage(for_model:, to:)
+      @bounding_models[for_model] = to
+    end
+
+    def clear_restriction_for(model)
+      @bounding_models.delete(model)
     end
 
   private
@@ -71,13 +81,26 @@ module DataWorks
 
     def find(model_name, index)
       model_name = model_name.to_sym
-      if index == 1 && @current_default[model_name]
-        @current_default[model_name]
+      if index == 1 && get_default_for(model_name)
+        get_default_for(model_name)
+      elsif index == 1
+        @data[model_name] ||= []
+        @data[model_name].reject{|e| has_invalid_parent?(e)}.first
       else
         @data[model_name] ||= []
         @data[model_name][index.to_i-1]
       end
     end
 
+    def get_default_for(model)
+      @bounding_models[model] || @current_default[model] || nil
+    end
+
+    def has_invalid_parent?(model)
+      @bounding_models.each do |k,v|
+        return true if (model.respond_to?(k) && model.send(k) != v)
+      end
+      false
+    end
   end
 end
