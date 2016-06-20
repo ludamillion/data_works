@@ -323,7 +323,7 @@ data.set_current_default(to: vermont, for_model: :state)
 data.add_towns(3) # this will create 3 towns all belonging to vermont
 ```
 
-Both `set_current_default` and `set_restriction` have corresponding `clear_X`
+Both `set_current_default` and `set_restriction` have corresponding `clear_X_for`
 methods for removing the default/restricting record.
 
 ### Overriding Attributes
