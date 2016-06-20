@@ -32,15 +32,15 @@ module DataWorks
       @data[model_name] << model
     end
 
-    def set_current_default(model, record)
-      @current_default[model] = record
+    def set_current_default(for_model:, to:)
+      @current_default[for_model] = to
     end
 
-    def clear_current_default(model)
+    def clear_current_default_for(model)
       @current_default.delete(model)
     end
 
-    def restrict_parentage(for_model:, to:)
+    def set_restriction(for_model:, to:)
       @bounding_models[for_model] = to
     end
 

@@ -215,6 +215,8 @@ Here's how DataWorks gives us the following benefits:
 * Use add_[model_name] to create a new object.
 * The necessary parent objects (SchoolDistrict, Town, County, etc.) are implied.
 
+###
+
 ### Referencing Objects
 
 * Any object that's created through DataWorks can be referenced by calling
@@ -269,6 +271,60 @@ we create the Schools:
     data.add_school_districts(2)
     data.add_school(school_district: data.school_district1)
     data.add_school(school_district: data.school_district2)
+
+The case above works find for records which only need to be different in one
+association but what if we want to generate a chain of associations or need to
+create many record which all need to share certain associations?
+
+Given the data model described above say that we want to be able to create two
+schools but have them each belong to a different state with the two states
+belonging to the same region. DataWorks can restrict the possible 'parentage' of
+models using the `#set_restriction` method.
+
+```ruby
+massachusetts = data.add_state(name: 'Massachusetts')
+vermont       = data.add_state(name: 'Vermont')
+
+# We now have two states so lets create those schools...
+
+mass_school = data.add_school # this will cause a SchoolDistrict and County to be created
+
+data.set_restriction(for_model: :state, to: vermont)
+
+vermont_school = data.add_school # this will also cause a SchoolDistrict and County to be created
+```
+
+Had we not used the `set_restriction` method above we would have needed to set
+the vermont model hierarchy up manually like so.
+
+```ruby
+vermont_county   = data.add_county
+vermont_district = data.add_school_district(county: vermont_county)
+vermont_school   = data.add_school(school_district: vermont_district)
+```
+
+DataWorks also provides a `#set_current_default` method which allows you to set
+the current default record to use when automatically associating models.
+
+Say we want to create multiple towns which belong to two states. We can do so
+like this
+
+```ruby
+massachusetts = data.add_state(name: 'Massachusetts')
+vermont       = data.add_state(name: 'Vermont')
+
+data.add_towns(3) # this will create 3 towns all belonging to massachusetts
+
+# massachusetts was the default above since it was created first. Now we
+# want vermont to be the default state for 3 more towns
+
+data.set_current_default(to: vermont, for_model: :state)
+
+data.add_towns(3) # this will create 3 towns all belonging to vermont
+```
+
+Both `set_current_default` and `set_restriction` have corresponding `clear_X`
+methods for removing the default/restricting record.
 
 ### Overriding Attributes
 
@@ -375,7 +431,7 @@ DataWorks can handle models that autocreate a child object:
       config.necessary_parents = {
         ...
       }
-      
+
       config.autocreated_children = {
         city: [:city_location]
       }
