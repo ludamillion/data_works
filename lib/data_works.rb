@@ -1,3 +1,6 @@
+require 'data_works/version'
+require 'active_record'
+
 require 'data_works/exceptions'
 require 'data_works/stale_relationship_checker'
 require 'data_works/relationships'

@@ -18,10 +18,17 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_runtime_dependency 'factory_girl', '>= 3.0'
-  s.add_runtime_dependency 'graphviz', '~> 0.1.0'
-  s.add_runtime_dependency 'launchy', '~> 2.4'
+  s.add_dependency "activerecord", "= 4.1.12"
+  s.add_dependency 'factory_girl', '>= 3.0'
+  s.add_dependency 'graphviz', '~> 0.1.0'
+  s.add_dependency 'launchy', '~> 2.4'
+
   s.add_development_dependency "bundler", "~> 1.9"
   s.add_development_dependency "rake", "~> 10.4"
-
+  s.add_development_dependency "database_cleaner", "~> 1.4.0"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "pry"
+  s.add_development_dependency "guard"
+  s.add_development_dependency "guard-rspec"
 end
