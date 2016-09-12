@@ -29,6 +29,9 @@ FactoryGirl.define do
     name { fake_string }
   end
 
+  factory :pet_sitting_patronage do
+  end
+
   factory :tag do
     registered_name { fake_string }
   end
