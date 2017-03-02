@@ -1,4 +1,3 @@
-Copyright (c) 2016 District Management Council
+Copyright (c) 2016 District Management Group
 
-Permission is not granted to use this code on any project not belonging
-to the District Management Council.
+Permission is not granted to use this code on any project not belonging to District Management Group.

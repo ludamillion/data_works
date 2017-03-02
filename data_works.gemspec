@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary       = %q{Reducing the complexity of testing complex data models }
   s.description   = %q{DataWorks makes it easier to work with FactoryGirl in the context of a complex data model.}
   s.homepage      = 'https://github.com/dmcouncil/data_works'
-  s.licenses      = ["Copyright (c) 2014 District Management Council"]
+  s.licenses      = ["Copyright (c) 2017 District Management Group"]
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
