@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency "activerecord", "= 4.1.12"
+  s.add_dependency "activerecord", "~> 4.1"
   s.add_dependency 'factory_girl', '>= 3.0'
   s.add_dependency 'graphviz', '~> 0.1.0'
   s.add_dependency 'launchy', '~> 2.4'
