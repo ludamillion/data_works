@@ -197,25 +197,25 @@ Here's how DataWorks gives us the following benefits:
 
 ### Basic Example
 
-    describe "School#number_of_people" do
-      before do
-        data = TheDataWorks.new
-        @school = data.add_school
-        data.add_person(school: @school)
-        data.add_person(school: @school)
-      end
+```ruby
+describe "School#number_of_people" do
+  before do
+    data = TheDataWorks.new
+    @school = data.add_school
+    data.add_person(school: @school)
+    data.add_person(school: @school)
+  end
 
-      it "returns the correct number of people attending that school" do
-        expect( @school.number_of_people ).to eq( 2 )
-      end
-    end
+  it "returns the correct number of people attending that school" do
+    expect( @school.number_of_people ).to eq( 2 )
+  end
+end
+```
 
 * Always start by creating a new DataWorks object.  This starts DataWorks off
   with a blank slate of objects.
 * Use add_[model_name] to create a new object.
 * The necessary parent objects (SchoolDistrict, Town, County, etc.) are implied.
-
-###
 
 ### Referencing Objects
 
@@ -226,39 +226,74 @@ Here's how DataWorks gives us the following benefits:
 
 Here's a test that puts two people in one school and three in another:
 
-    describe "School#number_of_people" do
-      before do
-        data = TheDataWorks.new
-        data.add_school
-        data.add_school
-        data.add_person(school: data.school1)
-        data.add_person(school: data.school1)
-        data.add_person(school: data.school2)
-        data.add_person(school: data.school2)
-        data.add_person(school: data.school2)
-        @school = data.school1
-      end
+```ruby
+describe "School#number_of_people" do
+  before do
+    data = TheDataWorks.new
+    data.add_school
+    data.add_school
+    data.add_person(school: data.school1)
+    data.add_person(school: data.school1)
+    data.add_person(school: data.school2)
+    data.add_person(school: data.school2)
+    data.add_person(school: data.school2)
+    @school = data.school1
+  end
 
-      it "returns the correct number of people attending that school" do
-        expect( @school.number_of_people ).to eq( 2 )
-      end
-    end
+  it "returns the correct number of people attending that school" do
+    expect( @school.number_of_people ).to eq( 2 )
+  end
+end
+```
 
 If we wanted to check the number of people in the school district, we can
 access the SchoolDistrict created behind the scenes like this:
 
-    data.school_district1.number_of_people
+```ruby
+data.school_district1.number_of_people
+```
 
 Or we could use the synonym:
 
-    data.the_school_district.number_of_people
+```ruby
+data.the_school_district.number_of_people
+```
 
 ### Adding Multiple Objects
 
-You can factory many objects at once:
+You can factory many objects at once by passing an integer count as the first argument to `add_`
 
-    data = TheDataWorks.new
-    data.add_schools(10)
+DataWorks treats any call to `add_` with an integer as the first argument as an attempt to create
+multiple objects. For clarity and readability DataWorks allows you to use the plural name of the
+models being created. This is not required
+
+Given
+
+```ruby
+data = TheDataWorks.new
+data.add_schools(10)
+```
+
+and
+
+    data.add_school(10)
+
+Will both create 10 school records.
+
+Plural model names are converted to singular using the `ActiveSupport` inflections module. If you
+need to specify any additional inflection rules you can add them in your test configuration. For
+reference here is the example given in the Rails documentation.
+
+```ruby
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.plural /^(ox)$/i, '\1\2en'
+  inflect.singular /^(ox)en/i, '\1'
+
+  inflect.irregular 'octopus', 'octopi'
+
+  inflect.uncountable 'equipment'
+end
+```
 
 ### Avoiding Object Reuse
 
@@ -267,10 +302,12 @@ automatically share a SchoolDistrict.  We can do this by simply manually
 creating separate SchoolDistrict objects and explicitly setting them when
 we create the Schools:
 
-    data = TheDataWorks.new
-    data.add_school_districts(2)
-    data.add_school(school_district: data.school_district1)
-    data.add_school(school_district: data.school_district2)
+```ruby
+data = TheDataWorks.new
+data.add_school_districts(2)
+data.add_school(school_district: data.school_district1)
+data.add_school(school_district: data.school_district2)
+```
 
 The case above works find for records which only need to be different in one
 association but what if we want to generate a chain of associations or need to
@@ -294,6 +331,8 @@ data.set_restriction(for_model: :state, to: vermont)
 vermont_school = data.add_school # this will also cause a SchoolDistrict and County to be created
 ```
 
+The return value of `#set_restriction` is the parent object passed as `to:`.
+
 Had we not used the `set_restriction` method above we would have needed to set
 the vermont model hierarchy up manually like so.
 
@@ -302,6 +341,12 @@ vermont_county   = data.add_county
 vermont_district = data.add_school_district(county: vermont_county)
 vermont_school   = data.add_school(school_district: vermont_district)
 ```
+
+The `#set_restriction` method also accepts a block. When the block form is used
+the restriction applies only to those records added within the block.
+
+The return value of the block form of `#set_restriction` is the last statement
+evaluated in the block.
 
 DataWorks also provides a `#set_current_default` method which allows you to set
 the current default record to use when automatically associating models.
@@ -332,8 +377,10 @@ DataWorks simply delegates to the factory corresponding to the model, so
 it will use the default attributes specified there.  If you pass attributes
 to DataWorks, it will pass them on to the factory:
 
-    data = TheDataWorks.new
-    data.add_school_district(name: 'Washington', rural: true)
+```ruby
+data = TheDataWorks.new
+data.add_school_district(name: 'Washington', rural: true)
+```
 
 ### Better Variable Names
 
@@ -341,11 +388,13 @@ Let's say you don't like calling your test data by number and want more
 meaningful names.  Just use plain old Ruby variables to make your tests
 clearer:
 
-    data = TheDataWorks.new
-    franklin = data.add_school_district(name: 'Franklin')
-    greenville = data.add_school_district(name: 'Greenville')
-    data.add_school(school_district: franklin)
-    data.add_school(school_district: greenville)
+```ruby
+data = TheDataWorks.new
+franklin = data.add_school_district(name: 'Franklin')
+greenville = data.add_school_district(name: 'Greenville')
+data.add_school(school_district: franklin)
+data.add_school(school_district: greenville)
+```
 
 ### Visualizing the Object Graph
 
@@ -353,10 +402,12 @@ If you want to debug your test data and explicitly see the object graph that
 DataWorks created for you, you can use the visualize method which will render
 an object graph for you and automatically open it:
 
-    data = TheDataWorks.new
-    data.add_school_district
-    data.add_school
-    data.visualize
+```ruby
+data = TheDataWorks.new
+data.add_school_district
+data.add_school
+data.visualize
+```
 
 If an object labeled "unmanaged" appears in the object graph it means that
 an object was factoried outside of DataWorks.  This can happen if your
@@ -387,23 +438,25 @@ DataWorks expects the following:
 
 In your spec_helper.rb file, put the following:
 
-    DataWorks.configure do |config|
-      config.necessary_parents = {
-        classroom:             [:school, :grade],
-        district:              [ ],
-        event:                 [:schedule, :school],
-        failure:               [:service_schedule_set],
-        grade:                 [ ],
-        iep_service:           [:service, :student],
-        schedule:              [:service_schedule_set],
-        scheduled_service:     [{:schedulable => :event}, :student, :iep_service],
-        school:                [:district],
-        service:               [:district, :service_type],
-        service_schedule_set:  [:district, :service],
-        service_type:          [ ],
-        student:               [:school, :classroom],
-      }
-    end
+```ruby
+DataWorks.configure do |config|
+  config.necessary_parents = {
+    classroom:             [:school, :grade],
+    district:              [ ],
+    event:                 [:schedule, :school],
+    failure:               [:service_schedule_set],
+    grade:                 [ ],
+    iep_service:           [:service, :student],
+    schedule:              [:service_schedule_set],
+    scheduled_service:     [{:schedulable => :event}, :student, :iep_service],
+    school:                [:district],
+    service:               [:district, :service_type],
+    service_schedule_set:  [:district, :service],
+    service_type:          [ ],
+    student:               [:school, :classroom],
+  }
+end
+```
 
 `config.necessary_parents` is where you tell DataWorks which other factories
 must be created when you create a particular factory.  Because FactoryGirl
@@ -427,15 +480,17 @@ The `:scheduled_services` portion of the configuration above demonstrates DataWo
 
 DataWorks can handle models that autocreate a child object:
 
-    DataWorks.configure do |config|
-      config.necessary_parents = {
-        ...
-      }
+```ruby
+DataWorks.configure do |config|
+  config.necessary_parents = {
+    ...
+  }
 
-      config.autocreated_children = {
-        city: [:city_location]
-      }
-    end
+  config.autocreated_children = {
+    city: [:city_location]
+  }
+end
+```
 
 For example, let's say that every time a `City` model is created, it must have a `CityLocation` model, so there is logic in the `City` model that autocreates a `CityLocation` object.  Note that when a model does this, DataWorks has no way of knowing about this autocreated child object and so it is not managed by DataWorks and could end up being a zombie object that could break your tests.  So by explicitly listing out the names of the models that get autocreated, this gives DataWorks a chance to remove the zombie object and hook up a DataWorks-aware object in its place.
 
@@ -445,7 +500,9 @@ Note that this is only for the situation where a model autocreates a single chil
 
 Once you're satisfied the configuration is accurate, run
 
-    $ rake data_works:bless
+```sh
+$ rake data_works:bless
+```
 
 And DataWorks will no longer complain (until you the next time you change a
 belongs_to relationship).
@@ -464,7 +521,6 @@ you can add a convenience function here.
 ## Issues
 
 * DataWorks does not yet work with namespaced models.
-* DataWorks does not yet work with models whose singular name ends in s.
 * DataWorks does not support factory traits
 * DataWorks does not allow associations where the foreign key name is not the same as the class name
 * The visualization component uses respond_to in verifying associations, which is not the most robust method if has_many is missing or with :through associations.

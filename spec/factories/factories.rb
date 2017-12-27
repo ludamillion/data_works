@@ -5,6 +5,12 @@ FactoryGirl.define do
     name { fake_string }
     kind { animal_types.sample }
     birth_year { (1914..2014).to_a.sample }
+
+    trait :bird do
+      kind 'Bird'
+    end
+
+    factory :pet_bird, traits: [:bird]
   end
 
   factory :agency do
@@ -27,6 +33,7 @@ FactoryGirl.define do
 
   factory :pet_sitter do
     name { fake_string }
+    kind { Kind.all.sample }
   end
 
   factory :pet_sitting_patronage do
@@ -38,10 +45,34 @@ FactoryGirl.define do
 
   factory :toy do
     name { "#{%w(Fluffy Rubber Squeeky).sample} #{%w(Ball Stick Shoe Book).sample}" }
+
+    trait :hooman do
+      kind 'Robot Vacuum' # you know the one
+    end
+
+    trait :bell do
+      kind 'Bell'
+    end
+
+    factory :hooman_toy, traits: [:hooman]
+    factory :bell_toy, traits: [:bell]
   end
 
+  factory :kind do
+    name { fake_word }
+  end
+
+  factory :picture do
+  end
+
+  factory :album do
+    name { fake_word }
+  end
+
+  factory :product do
+  end
 end
 
 def animal_types
-  %w(Cat Dog Ferret Moose)
+  %w(Cat Dog Ferret Moose Octopus)
 end

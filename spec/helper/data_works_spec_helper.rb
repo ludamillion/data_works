@@ -16,15 +16,22 @@ end
 DataWorks.configure do |config|
 
 config.necessary_parents = {
-    pet:                   [],
-    toy:                   [:pet],
-    tag:                   [:pet],
-    pet_food:              [],
-    agency:                [],
-    pet_sitter:            [:agency],
-    pet_sitting_patronage: [:pet_sitter, :pet],
-    pet_profile:           [:pet],
     address:               [:pet_profile],
+    agency:                [],
+    bell_toy:              [{ :pet => :pet_bird }],
+    hooman_toy:            [:pet],
+    kind:                  [],
+    pet:                   [],
+    pet_bird:              [],
+    pet_food:              [],
+    pet_profile:           [:pet],
+    pet_sitter:            [:agency, :kind],
+    pet_sitting_patronage: [:pet_sitter, :pet],
+    tag:                   [:pet],
+    toy:                   [:pet],
+    album:                 [],
+    product:               [],
+    picture:               [{ :imageable => :product }, :album],
   }
 
   config.autocreated_children = {
@@ -32,7 +39,6 @@ config.necessary_parents = {
 end
 
 class TheDataWorks < DataWorks::Base
-
 end
 
 RSpec.configure do |config|

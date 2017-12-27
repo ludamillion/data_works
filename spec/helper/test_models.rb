@@ -33,7 +33,16 @@ class Agency < ActiveRecord::Base
   has_many :pet_sitters
 end
 
+class Kind < ActiveHash::Base
+  self.data = [
+    {:id => 1, :name => "Amateur"},
+    {:id => 2, :name => "Professional"}
+  ]
+end
+
 class PetSitter < ActiveRecord::Base
+  extend ActiveHash::Associations::ActiveRecordExtensions
+  belongs_to :kind
   belongs_to :agency
   has_many :pet_sitting_patronages
   has_many :pets, through: :pet_sitting_patronages
@@ -53,24 +62,22 @@ class Address < ActiveRecord::Base
   belongs_to :pet_profile
 end
 
-
-
 #*******************************************************************************
 #  For testing polymorphic associations and custom-named foreign keys.
 #
 
-# class Picture < ActiveRecord::Base
-#   belongs_to :imageable, polymorphic: true
-#   belongs_to :album, foreign_key: 'picture_album_id'
-# end
+class Picture < ActiveRecord::Base
+  belongs_to :imageable, polymorphic: true
+  belongs_to :album, foreign_key: 'picture_album_id'
+end
 
-# class Product < ActiveRecord::Base
-#   has_many :pictures, as: :imageable
-# end
+class Product < ActiveRecord::Base
+  has_many :pictures, as: :imageable
+end
 
-# class Album < ActiveRecord::Base
-#   has_many :pictures, foreign_key: 'picture_album_id'
-# end
+class Album < ActiveRecord::Base
+  has_many :pictures, foreign_key: 'picture_album_id'
+end
 
 
 

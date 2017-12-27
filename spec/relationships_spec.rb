@@ -64,7 +64,7 @@ describe DataWorks::Relationships do
 
     describe "pet_sitter" do
       it "returns a collection with a single parent object " do
-        expect(DataWorks::Relationships.necessary_parents_for(:pet_sitter).count).to eq 1
+        expect(DataWorks::Relationships.necessary_parents_for(:pet_sitter).count).to eq 2
       end
       it "returns a parent object with #association_name => agency" do
         parents = DataWorks::Relationships.necessary_parents_for(:pet_sitter)

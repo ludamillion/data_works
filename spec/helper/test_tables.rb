@@ -8,7 +8,7 @@ module DataWorks
 
           create_table :agencies, force: true do |t|
             t.string :name, null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :addresses, force: true do |t|
@@ -16,12 +16,12 @@ module DataWorks
             t.string   :city,            null: false
             t.string   :state,           null: false
             t.integer  :pet_profile_id,  null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :pet_foods, force: true do |t|
             t.string :name, null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :pet_foods_pets, force: true, id: false do |t|
@@ -33,81 +33,82 @@ module DataWorks
             t.string   :description,     null: false
             t.string   :nickname
             t.integer  :pet_id, null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :pet_sitters, force: true do |t|
-            t.string  :name, null: false
-            t.integer :agency_id, null: false
-            t.timestamps
+            t.string   :name, null: false
+            t.integer  :agency_id, null: false
+            t.integer  :kind_id, null: false
+            t.timestamps null: false
           end
 
           create_table :pet_sitting_patronages, force: true do |t|
             t.integer  :pet_id,        null: false
             t.integer  :pet_sitter_id, null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :pet_tags, force: true do |t|
             t.string   :registered_name, null: false
             t.integer  :pet_id, null: false
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :pets, force: true do |t|
             t.string  :name,        null: false
             t.string  :kind,        null: false
             t.integer :birth_year
-            t.timestamps
+            t.timestamps null: false
           end
 
           create_table :toys, force: true do |t|
             t.string   :name
             t.string   :kind
             t.integer  :pet_id
-            t.timestamps
+            t.timestamps null: false
           end
 
-          # create_table :albums, force: true do |t|
-          #   t.string :name, null: false
-          #   t.timestamps
-          # end
+          create_table :albums, force: true do |t|
+            t.string :name, null: false
+            t.timestamps null: false
+          end
 
-          # create_table :pictures, force: true do |t|
-          #   t.string  :name
-          #   t.integer :imageable_id
-          #   t.string  :imageable_type
-          #   t.integer :picture_album_id
-          #   t.timestamps
-          # end
+          create_table :pictures, force: true do |t|
+            t.string  :name
+            t.integer :imageable_id
+            t.string  :imageable_type
+            t.integer :picture_album_id
+            t.timestamps null: false
+          end
 
-          # create_table :products, force: true do |t|
-          #   t.string  :name
-          #   t.timestamps
-          # end
+          create_table :products, force: true do |t|
+            t.string  :name
+            t.timestamps null: false
+          end
 
           # create_table :amenities, force: true do |t|
           #   t.string   :name
           #   t.integer  :vehicle_id
           #   t.integer  :owner_id
-          #   t.timestamps
+          #   t.timestamps null: false
           # end
 
           # create_table :owners, force: true do |t|
           #   t.string :name, null: false
-          #   t.timestamps
+          #   t.timestamps null: false
           # end
 
           # create_table :vehicles, force: true do |t|
           #   t.string  :name
           #   t.integer :owner_id
-          #   t.timestamps
+          #   t.timestamps null: false
           # end
 
           # create_table :warranties, force: true do |t|
           #   t.string   :name
           #   t.integer  :amenity_id
-          #   t.timestamps
+          #   t.timestamps null: false
           # end
 
         end
