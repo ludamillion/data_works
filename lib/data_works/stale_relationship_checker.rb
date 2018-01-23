@@ -39,7 +39,6 @@ module DataWorks
           message << "up-to-date."
           message << "\nHere's a hint as to where the data model changes "
           message << "are #{differences.inspect}."
-          raise ModelRelationshipsOutOfDateError.new(message)
         end
       end
 
