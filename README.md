@@ -526,4 +526,4 @@ you can add a convenience function here.
 
 # Credit
 
-DataWorks was developed by [Wyatt Greene](/techiferous) and [Luke Inglis](/ludamillion) at [The District Management Group](/dmcouncil). 
+DataWorks was developed by [Wyatt Greene](https://github.com/techiferous) and [Luke Inglis](https://github.com/ludamillion) at [The District Management Group](https://github.com/dmcouncil). 
