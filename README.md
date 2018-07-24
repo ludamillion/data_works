@@ -12,7 +12,6 @@ DataWorks has these benefits:
 * Improves test performance.
 
 
-
 ## Contents
 
 * [The Problem That DataWorks Solves](#the-problem-that-dataworks-solves)
@@ -524,3 +523,7 @@ you can add a convenience function here.
 * DataWorks does not support factory traits
 * DataWorks does not allow associations where the foreign key name is not the same as the class name
 * The visualization component uses respond_to in verifying associations, which is not the most robust method if has_many is missing or with :through associations.
+
+# Credit
+
+DataWorks was developed by [Wyatt Greene](/techiferous) and [Luke Inglis](/ludamillion) at [The District Management Group](/dmcouncil). 
