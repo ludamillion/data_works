@@ -7,10 +7,10 @@ Gem::Specification.new do |s|
   s.name          = "data_works"
   s.version       = DataWorks::VERSION
   s.authors       = ["Wyatt Greene", "Anne Geiersbach", "Dennis Chan", "Luke Inglis"]
-  s.email         = ["dev@dmgroupk12.com"]
+  s.email         = ["ld.inglis@gmail.com"]
   s.summary       = %q{Reducing the complexity of testing complex data models }
-  s.description   = %q{DataWorks makes it easier to work with FactoryGirl in the context of a complex data model.}
-  s.homepage      = 'https://github.com/dmcouncil/data_works'
+  s.description   = %q{DataWorks makes it easier to work with FactoryBot in the context of a complex data model.}
+  s.homepage      = 'https://github.com/ludamillion/data_works'
   s.licenses      = ["MIT", "Copyright (c) 2018 District Management Group"]
 
   s.files         = `git ls-files`.split("\n")
