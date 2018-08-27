@@ -4,7 +4,7 @@ SimpleCov.start
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'active_support/all'
 require 'active_support/testing/time_helpers'
-require 'factory_girl'
+require 'factory_bot'
 require 'database_cleaner'
 require 'active_hash'
 require 'sqlite3'

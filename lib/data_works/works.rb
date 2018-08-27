@@ -1,5 +1,5 @@
 module DataWorks
-  class Works
+  class Base
 
     include Visualization
 
@@ -12,14 +12,20 @@ module DataWorks
       @current_default = {}
       # keep a registry of the 'limiting scope' for parentage
       @bounding_models = {}
-    end
 
-    def method_missing(method_name, *args, &block)
-      method_name = method_name.to_s
-      if method_name.starts_with? 'add_'
-        add_model(method_name, *args)
-      else
-        get_model(method_name, *args)
+      Relationships.necessary_parents.each do |parent, _|
+        self.class.send(:define_method, "the_#{parent}") do
+          find(parent, 1)
+        end
+        self.class.send(:define_method, "#{parent}") do |n|
+          find(parent, n)
+        end
+        self.class.send(:define_method, "add_#{parent}") do |options = {}|
+          add_model(parent, options)
+        end
+        self.class.send(:define_method, "add_#{parent.to_s.pluralize}") do |options = {}|
+          add_model(parent, options)
+        end
       end
     end
 
@@ -58,20 +64,15 @@ module DataWorks
       @bounding_models.delete(model)
     end
 
-  private
+    private
 
-    def add_model(method_name, *args)
-      if method_name =~ /\Aadd_(\w+)\Z/
-        model_name = $1
-        many = args[0].kind_of? Integer
-      end
-      if model_name
-        grafter = Grafter.new(self, (many ? model_name.singularize : model_name))
-        if many
-          grafter.add_many(*args)
-        else
-          grafter.add_one(*args)
-        end
+    def add_model(model_name, *args)
+      many = args[0].kind_of? Integer
+      grafter = Grafter.new(self, (many ? model_name.to_s.singularize : model_name))
+      if many
+        grafter.add_many(*args)
+      else
+        grafter.add_one(*args)
       end
     end
 

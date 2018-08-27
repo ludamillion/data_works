@@ -11,7 +11,7 @@ module DataWorks
 
       def create_model_and_its_necessary_parents
         created_parents = @parent_creator.create_necessary_parents(parents_we_already_have)
-        FactoryGirl.create(@model_name, @model_attrs.merge(created_parents))
+        FactoryBot.create(@model_name, @model_attrs.merge(created_parents))
       end
 
       private

@@ -38,7 +38,13 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.require_paths = ['lib']
+  s.require_paths = ["lib"]
+
+  s.add_dependency "activerecord", "~> 4.1"
+  s.add_dependency "activesupport", "~> 4.1"
+  s.add_dependency 'factory_bot', '>= 4.8'
+  s.add_dependency 'graphviz', '~> 0.1.0'
+  s.add_dependency 'launchy', '~> 2.4'
 
   add_dependencies(s)
   add_development_dependencies(s)
