@@ -7,6 +7,10 @@ module DataWorks
       @@autocreated_children[model_name] || []
     end
 
+    def self.necessary_parents
+      @necessary_parents
+    end
+
     def self.necessary_parents=(hash)
       @@necessary_parents = hash
       StaleRelationshipChecker.check!
