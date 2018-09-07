@@ -103,6 +103,32 @@ describe DataWorks::Relationships do
         expect(parents.map(&:model_name)).to contain_exactly(:pet_sitter, :pet)
       end
     end
+
+    describe "an unregistered model" do
+      it "raises an error" do
+        expect { DataWorks::Relationships.necessary_parents_for(:lobster) }.to raise_error(DataWorks::DataWorksError)
+      end 
+    end
+  end
+
+  describe "#autocreated_children" do
+    before do 
+      DataWorks::Relationships.autocreated_children = { 
+        sheep: [:clone],
+        hands: [:left, :right] 
+      }
+    end
+    describe "when there are no autocreated children of the given model" do
+      it 'returns an empty array ' do
+        expect(DataWorks::Relationships.autocreated_children_of(:pet)).to eq([])
+      end
+    end
+    describe "when there are autocreated children of the given model" do
+      it 'returns an array containing the collection of child models' do
+        expect(DataWorks::Relationships.autocreated_children_of(:sheep)).to eq([:clone])
+        expect(DataWorks::Relationships.autocreated_children_of(:hands)).to eq([:left, :right])
+      end
+    end
   end
 end
 

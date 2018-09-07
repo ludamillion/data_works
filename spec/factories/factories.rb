@@ -2,8 +2,12 @@ require_relative '../lib/data_faker'
 
 FactoryGirl.define do
   factory :pet do
+    transient do
+      animal_types { %w(Cat Dog Ferret Moose Octopus) }
+    end
+  
     name { fake_string }
-    kind { animal_types.sample }
+    kind { %w(Cat Dog Ferret Moose Octopus).sample }
     birth_year { (1914..2014).to_a.sample }
 
     trait :bird do
@@ -24,7 +28,7 @@ FactoryGirl.define do
   end
 
   factory :pet_food do
-    name { "#{animal_types.sample} #{%w(Kibble Chow Food Munchies).sample}" }
+    name { "#{%w(Cat Dog Ferret Moose Octopus).sample} #{%w(Kibble Chow Food Munchies).sample}" }
   end
 
   factory :pet_profile do
@@ -71,8 +75,4 @@ FactoryGirl.define do
 
   factory :product do
   end
-end
-
-def animal_types
-  %w(Cat Dog Ferret Moose Octopus)
 end
