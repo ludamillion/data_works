@@ -1,11 +1,4 @@
-language: ruby
-rvm:
- - 2.2
- - 2.3
- - 2.4
- - 2.5
-
- env:
+env:
   global:
     - CC_TEST_REPORTER_ID=787a2f89b15c637323c7340d65ec17e898ac44480706b4b4122ea040c2a88f1d
 language: ruby
@@ -22,3 +15,4 @@ script:
   - bundle exec rspec
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
