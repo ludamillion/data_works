@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
   s.add_development_dependency "active_hash", "~> 1.5.0"
+  s.add_development_dependency "simplecov", "~> 0.16"
 end
