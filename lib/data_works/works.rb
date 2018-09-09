@@ -3,6 +3,8 @@ module DataWorks
 
     include Visualization
 
+    attr_reader :current_default
+
     def initialize
       # we keep a registry of all models that we create
       @data = {}
