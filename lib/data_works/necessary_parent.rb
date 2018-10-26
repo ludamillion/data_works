@@ -11,17 +11,15 @@
 #
 module DataWorks
   class NecessaryParent
-
     attr_reader :association_name, :model_name
 
     def initialize(entry)
       if entry.is_a? Hash
         @association_name = entry.keys.first
-        @model_name  = entry.values.first
+        @model_name = entry.values.first
       else
         @association_name = @model_name = entry
       end
     end
-
   end
 end

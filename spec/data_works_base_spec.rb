@@ -1,14 +1,7 @@
 require_relative 'helper/data_works_spec_helper'
 
 describe 'DataWorks::Base' do
-  it 'raises a custom error for missing methods' do
-    message =  'bogus method not found in data works'
-    expect { DataWorks::Base.new.bogus }.to raise_error(NoMethodError, message)
-  end
-end
-
-describe 'DataWorks::Works' do
-  let(:data_works) { DataWorks::Works.new }
+  let(:data_works) { DataWorks::Base.new }
 
   describe 'managing current defaults' do
     before { data_works.set_current_default(for_model: :chicken, to: :egg) }

@@ -1,6 +1,5 @@
 module DataWorks
   class Grafter
-
     class ModelCreator
       def initialize(works, model_name, model_attrs)
         @works = works
@@ -32,7 +31,7 @@ module DataWorks
       @model_name = model_name.to_sym
     end
 
-    def add_many(number, model_attrs={})
+    def add_many(number, model_attrs = {})
       new_models = []
       number.times do
         new_models << add_one(model_attrs)
@@ -40,12 +39,11 @@ module DataWorks
       new_models
     end
 
-    def add_one(model_attrs={})
+    def add_one(model_attrs = {})
       model_creator = ModelCreator.new(@works, @model_name, model_attrs)
       new_model = model_creator.create_model_and_its_necessary_parents
       @works.was_added(@model_name, new_model)
       new_model
     end
-
   end
 end

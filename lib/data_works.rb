@@ -10,6 +10,5 @@ require_relative 'data_works/necessary_parent'
 require_relative 'data_works/parent_creator'
 require_relative 'data_works/grafter'
 require_relative 'data_works/works'
-require_relative 'data_works/base'
 require_relative 'data_works/config'
 require_relative "data_works/railtie" if defined?(Rails)

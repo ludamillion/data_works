@@ -1,6 +1,5 @@
 module DataWorks
   class Base
-
     include Visualization
 
     attr_reader :current_default
@@ -13,25 +12,14 @@ module DataWorks
       # keep a registry of the 'limiting scope' for parentage
       @bounding_models = {}
 
-      Relationships.necessary_parents.each do |parent, _|
-        self.class.send(:define_method, "the_#{parent}") do
-          find(parent, 1)
-        end
-        self.class.send(:define_method, "#{parent}") do |n|
-          find(parent, n)
-        end
-        self.class.send(:define_method, "add_#{parent}") do |options = {}|
-          add_model(parent, options)
-        end
-        self.class.send(:define_method, "add_#{parent.to_s.pluralize}") do |options = {}|
-          add_model(parent, options)
-        end
+      Relationships.necessary_parents.each_key do |parent|
+        define_model_finder_methods parent
+        define_model_adder_methods parent
       end
     end
 
     def find_or_add(model_name)
-      record = find(model_name, 1)
-      record ? record : send("add_#{model_name}")
+      find(model_name, 1) || send("add_#{model_name}")
     end
 
     def was_added(model_name, model)
@@ -48,16 +36,14 @@ module DataWorks
       @current_default.delete(model)
     end
 
-    def set_restriction(for_model:, to:, &block)
-      if block_given?
-        @bounding_models[for_model] = to
-        block_return = block.call
-        clear_restriction_for(for_model)
-        block_return
-      elsif
-        @bounding_models[for_model] = to
-        to
-      end
+    def set_restriction(for_model:, to:)
+      @bounding_models[for_model] = to
+
+      return unless block_given?
+
+      block_return = yield
+      clear_restriction_for(for_model)
+      block_return
     end
 
     def clear_restriction_for(model)
@@ -67,7 +53,7 @@ module DataWorks
     private
 
     def add_model(model_name, *args)
-      many = args[0].kind_of? Integer
+      many = args[0].is_a? Integer
       grafter = Grafter.new(self, (many ? model_name.to_s.singularize : model_name))
       if many
         grafter.add_many(*args)
@@ -76,27 +62,16 @@ module DataWorks
       end
     end
 
-    def get_model(method_name, *args)
-      if method_name =~ /\A(\w+?)(\d+)\Z/
-        model_name = $1
-        index = $2
-      elsif method_name =~ /\Athe_(\w+)\Z/
-        model_name = $1
-        index = 1
-      end
-      find(model_name, index)
-    end
-
     def find(model_name, index)
       model_name = model_name.to_sym
       if index == 1 && get_default_for(model_name)
         get_default_for(model_name)
       elsif index == 1
         @data[model_name] ||= []
-        @data[model_name].reject{|e| has_invalid_parent?(e)}.first
+        @data[model_name].reject { |e| invalid_parent?(e) }.first
       else
         @data[model_name] ||= []
-        @data[model_name][index.to_i-1]
+        @data[model_name][index.to_i - 1]
       end
     end
 
@@ -104,11 +79,29 @@ module DataWorks
       @bounding_models[model] || @current_default[model] || nil
     end
 
-    def has_invalid_parent?(model)
-      @bounding_models.each do |k,v|
-        return true if (model.respond_to?(k) && model.send(k) != v)
+    def invalid_parent?(model)
+      @bounding_models.each do |k, v|
+        return true if model.respond_to?(k) && model.send(k) != v
       end
       false
+    end
+
+    def define_model_finder_methods(parent)
+      self.class.send(:define_method, "the_#{parent}") do
+        find(parent, 1)
+      end
+      self.class.send(:define_method, parent.to_s) do |n|
+        find(parent, n)
+      end
+    end
+
+    def define_model_adder_methods(parent)
+      self.class.send(:define_method, "add_#{parent}") do |options = {}|
+        add_model(parent, options)
+      end
+      self.class.send(:define_method, "add_#{parent.to_s.pluralize}") do |options = {}|
+        add_model(parent, options)
+      end
     end
   end
 end
