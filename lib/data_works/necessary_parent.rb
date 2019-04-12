@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The purpose of this class is to encapsulate the idea that when configuring
 # DataWorks, necessary_parents can include symbols or hashes, like so:
 #

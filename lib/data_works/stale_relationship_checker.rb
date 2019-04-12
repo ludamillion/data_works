@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module DataWorks
   class StaleRelationshipChecker
     class << self
-
       def check!
         if snapshot_exists?
           check_for_staleness!
@@ -13,38 +14,45 @@ module DataWorks
       def create_snapshot!
         File.open(filepath, 'w') do |f|
           f.puts explanatory_comments
-          f.puts "DataWorks::MOST_RECENT_SNAPSHOT = ["
+          f.puts 'DataWorks::MOST_RECENT_SNAPSHOT = ['
           current_snapshot.each do |class_name, belongs_to_name|
             f.puts "  ['#{class_name}', #{belongs_to_name}],"
           end
-          f.puts "]"
+          f.puts ']'
         end
       end
 
-    private
+      private
 
       def check_for_staleness!
+        return if current == saved
+
         load_snapshot
         saved = DataWorks::MOST_RECENT_SNAPSHOT
         current = current_snapshot
-        if saved != current
-          differences = (saved - current) + (current - saved)
-          message = "DataWorks has detected changes to your data model. "
-          message << "DataWorks requires that the config.necessary_parents "
-          message << "in your spec_helper.rb file be an accurate description "
-          message << "of what parent objects need to be automatically "
-          message << "factoried. Please update this configuration to be "
-          message << "accurate, if necessary.  Then run rake data_works:bless "
-          message << "to tell DataWorks that the configuration is now "
-          message << "up-to-date."
-          message << "\nHere's a hint as to where the data model changes "
-          message << "are #{differences.inspect}."
-          raise ModelRelationshipsOutOfDateError.new(message)
-        end
+
+        differences = (saved - current) + (current - saved)
+
+        raise ModelRelationshipsOutOfDateError, staleness_message(differences)
       end
 
       def snapshot_exists?
-        File.exists?(filepath)
+        File.exist?(filepath)
+      end
+
+      def staleness_message(differences)
+        <<-MESSAGE.strip_heredoc
+          DataWorks has detected changes to your data model.
+          DataWorks requires that the config.necessary_parents
+          in your spec_helper.rb file be an accurate description
+          of what parent objects need to be automatically
+          factoried. Please update this configuration to be
+          accurate, if necessary.  Then run rake data_works:bless
+          to tell DataWorks that the configuration is now
+          up-to-date.
+          \nHere's a hint as to where the data model changes
+          are #{differences.inspect}."
+        MESSAGE
       end
 
       def explanatory_comments
@@ -76,12 +84,11 @@ module DataWorks
       end
 
       def all_active_record_classes
-        @all_classes ||= begin
+        @all_active_record_classes ||= begin
           Rails.application.eager_load!
           ActiveRecord::Base.send(:descendants)
         end
       end
-
     end
   end
 end

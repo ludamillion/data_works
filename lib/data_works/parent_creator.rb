@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module DataWorks
   class ParentCreator
-
     def initialize(works, model_name, model_attrs)
       @works = works
       @model_name = model_name.to_sym
@@ -13,7 +14,7 @@ module DataWorks
     # like so:
     #    { :school => the_school_model }
     def create_necessary_parents(parents_we_already_have)
-      for missing_necessary_parent in missing_necessary_parents(parents_we_already_have)
+      missing_necessary_parents(parents_we_already_have).each do |missing_necessary_parent|
         find_or_add(missing_necessary_parent)
       end
       @parents
@@ -49,9 +50,8 @@ module DataWorks
     # any model objects that a parent may have created outside of DataWorks
     # before they cause trouble.
     def destroy_zombies(parent_model, parent_association_name)
-      if zombies_possible?(parent_association_name)
-        destroy_zombie_child_of(parent_model)
-      end
+      return unless zombies_possible?(parent_association_name)
+      destroy_zombie_child_of(parent_model)
     end
 
     def zombies_possible?(parent_association_name)
@@ -62,6 +62,5 @@ module DataWorks
       child = parent_model.send(@model_name)
       child.destroy if child.persisted? && !child.destroyed?
     end
-
   end
 end

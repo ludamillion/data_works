@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'graphviz'
 require 'launchy'
 
@@ -45,18 +47,20 @@ module DataWorks
       end
 
       model_names.each do |m|
-        children = @data.values
-                        .flatten
-                        .reject { |e| e.is_a?(m.to_s.classify.constantize) }
-                        .select { |e| e.class.reflect_on_association(m) }
-
         parents = @data[m]
 
-        children.each do |child|
+        child_models.each do |child|
           parent = parents.detect { |p| p.id == child.send("#{m}_id") }
           connect(parent, child)
         end
       end
+    end
+
+    def child_models(model_name)
+      @data.values
+           .flatten
+           .reject { |e| e.is_a?(model_name.to_s.classify.constantize) }
+           .select { |e| e.class.reflect_on_association(model_name) }
     end
 
     # accepts symbols like :district, :district_schedule_context
@@ -97,21 +101,21 @@ module DataWorks
       child_model_name = model_name_of(child)
       parent_model_name = model_name_of(parent)
 
-      return unless @data[parent_model_name]
+      return unless @data[parent_model_name] || @data[child_model_name]
 
       i = @data[parent_model_name].find_index { |model| model.id == parent.id }
       parent_node = @nodes[parent_model_name][i]
-      if parent_node
-        if @data[child_model_name]
-          i = @data[child_model_name].find_index { |model| model.id == child.id }
-          if i.nil? # this factory was not created via the DataWorks
-            child_node = @g.add_node("#{child_model_name} (unmanaged)", shape: get_node_shape(child))
-          else
-            child_node = @nodes[child_model_name][i]
-          end
-          parent_node.connect(child_node) if child_node
-        end
-      end
+
+      return unless parent_node
+
+      i = @data[child_model_name].find_index { |model| model.id == child.id }
+
+      child_node = if i.nil? # this factory was not created via the DataWorks
+                     @g.add_node("#{child_model_name} (unmanaged)", shape: get_node_shape(child))
+                   else
+                     @nodes[child_model_name][i]
+                   end
+      parent_node.connect(child_node) if child_node
     end
 
     def model_name_of(model)

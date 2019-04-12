@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DataWorks
   class Grafter
     class ModelCreator

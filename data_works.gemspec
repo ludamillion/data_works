@@ -5,9 +5,9 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'data_works/version'
 
 def add_dependencies(spec)
-  spec.add_dependency 'activerecord', '~> 4.1'
-  spec.add_dependency 'activesupport', '~> 4.1'
-  spec.add_dependency 'factory_girl', '>= 3.0'
+  spec.add_dependency 'activerecord', '>= 4.2'
+  spec.add_dependency 'activesupport', '>= 4.2'
+  spec.add_dependency 'factory_bot', '>= 4.8'
   spec.add_dependency 'graphviz', '~> 0.1.0'
   spec.add_dependency 'launchy', '~> 2.4'
 end
