@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in copyable.gemspec
+# Specify your gem's dependencies in data_works.gemspec
 gemspec
