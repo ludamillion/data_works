@@ -3,8 +3,6 @@ env:
     - CC_TEST_REPORTER_ID=56c19f947137d15ea989a3b8d6c14be386d02f3d9ab04220668b318b5aee30ba
 language: ruby
 rvm:
-  - 2.2
-  - 2.3
   - 2.4
   - 2.5
 before_script:
