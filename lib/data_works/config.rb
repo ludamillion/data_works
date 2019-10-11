@@ -1,11 +1,11 @@
-module DataWorks
+# frozen_string_literal: true
 
+module DataWorks
   def self.configure
     yield(Config)
   end
 
   class Config
-
     def self.necessary_parents=(hash)
       Relationships.necessary_parents = hash
     end
@@ -13,7 +13,5 @@ module DataWorks
     def self.autocreated_children=(hash)
       Relationships.autocreated_children = hash
     end
-
   end
-
 end

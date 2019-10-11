@@ -1,6 +1,6 @@
 require_relative '../lib/data_faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :pet do
     transient do
       animal_types { %w(Cat Dog Ferret Moose Octopus) }
@@ -11,7 +11,7 @@ FactoryGirl.define do
     birth_year { (1914..2014).to_a.sample }
 
     trait :bird do
-      kind 'Bird'
+      kind { 'Bird' }
     end
 
     factory :pet_bird, traits: [:bird]
@@ -51,11 +51,11 @@ FactoryGirl.define do
     name { "#{%w(Fluffy Rubber Squeeky).sample} #{%w(Ball Stick Shoe Book).sample}" }
 
     trait :hooman do
-      kind 'Robot Vacuum' # you know the one
+      kind { 'Robot Vacuum' } # you know the one
     end
 
     trait :bell do
-      kind 'Bell'
+      kind { 'Bell' }
     end
 
     factory :hooman_toy, traits: [:hooman]
